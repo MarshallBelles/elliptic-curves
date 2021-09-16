@@ -11,7 +11,7 @@ use ecdsa_core::{
     rfc6979,
     signature::{
         digest::{BlockInput, FixedOutput, Reset, Update},
-        DigestSigner, RandomizedDigestSigner,
+        DigestSigner,
     },
 };
 use elliptic_curve::{
@@ -20,15 +20,6 @@ use elliptic_curve::{
     rand_core::{CryptoRng, RngCore},
     subtle::{Choice, ConstantTimeEq},
 };
-
-#[cfg(any(feature = "keccak256", feature = "sha256"))]
-use ecdsa_core::signature::{self, digest::Digest, PrehashSignature, RandomizedSigner};
-
-#[cfg(feature = "pkcs8")]
-use crate::pkcs8::{self, FromPrivateKey};
-
-#[cfg(feature = "pem")]
-use core::str::FromStr;
 
 /// ECDSA/secp256k1 signing key
 #[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
@@ -62,39 +53,13 @@ impl SigningKey {
         }
     }
 
-    /// Legacy alias for [`SigningKey::verifying_key`].
-    #[deprecated(since = "0.9.3", note = "use `verifying_key()` instead")]
-    pub fn verify_key(&self) -> VerifyingKey {
-        self.verifying_key()
-    }
-
     /// Serialize this [`SigningKey`] as bytes
     pub fn to_bytes(&self) -> FieldBytes {
         self.inner.to_bytes()
     }
 }
 
-#[cfg(any(feature = "keccak256", feature = "sha256"))]
-impl<S> signature::Signer<S> for SigningKey
-where
-    S: PrehashSignature,
-    Self: DigestSigner<S::Digest, S>,
-{
-    fn try_sign(&self, msg: &[u8]) -> Result<S, Error> {
-        self.try_sign_digest(Digest::chain(S::Digest::new(), msg))
-    }
-}
-
-#[cfg(any(feature = "keccak256", feature = "sha256"))]
-impl<S> RandomizedSigner<S> for SigningKey
-where
-    S: PrehashSignature,
-    Self: RandomizedDigestSigner<S::Digest, S>,
-{
-    fn try_sign_with_rng(&self, rng: impl CryptoRng + RngCore, msg: &[u8]) -> Result<S, Error> {
-        self.try_sign_digest_with_rng(rng, S::Digest::new().chain(msg))
-    }
-}
+pub use sha3::{Digest, Sha3_256};
 
 impl<D> DigestSigner<D, Signature> for SigningKey
 where
@@ -118,42 +83,6 @@ where
             .try_sign_recoverable_prehashed(ephemeral_scalar.as_ref(), &msg_scalar)?;
 
         recoverable::Signature::new(&signature, recoverable::Id(recovery_id as u8))
-    }
-}
-
-impl<D> RandomizedDigestSigner<D, Signature> for SigningKey
-where
-    D: BlockInput + FixedOutput<OutputSize = U32> + Clone + Default + Reset + Update,
-{
-    fn try_sign_digest_with_rng(
-        &self,
-        rng: impl CryptoRng + RngCore,
-        digest: D,
-    ) -> Result<Signature, Error> {
-        let sig: recoverable::Signature = self.try_sign_digest_with_rng(rng, digest)?;
-        Ok(sig.into())
-    }
-}
-
-impl<D> RandomizedDigestSigner<D, recoverable::Signature> for SigningKey
-where
-    D: BlockInput + FixedOutput<OutputSize = U32> + Clone + Default + Reset + Update,
-{
-    fn try_sign_digest_with_rng(
-        &self,
-        mut rng: impl CryptoRng + RngCore,
-        digest: D,
-    ) -> Result<recoverable::Signature, Error> {
-        let mut added_entropy = FieldBytes::default();
-        rng.fill_bytes(&mut added_entropy);
-
-        let ephemeral_scalar = rfc6979::generate_k(&self.inner, digest.clone(), &added_entropy);
-        let msg_scalar = Scalar::from_digest(digest);
-        let (signature, is_r_odd) = self
-            .inner
-            .try_sign_recoverable_prehashed(ephemeral_scalar.as_ref(), &msg_scalar)?;
-
-        recoverable::Signature::new(&signature, recoverable::Id(is_r_odd as u8))
     }
 }
 
@@ -271,26 +200,6 @@ impl From<&NonZeroScalar> for SigningKey {
         Self {
             inner: *secret_scalar,
         }
-    }
-}
-
-#[cfg(feature = "pkcs8")]
-#[cfg_attr(docsrs, doc(cfg(feature = "pkcs8")))]
-impl FromPrivateKey for SigningKey {
-    fn from_pkcs8_private_key_info(
-        private_key_info: pkcs8::PrivateKeyInfo<'_>,
-    ) -> pkcs8::Result<Self> {
-        SecretKey::from_pkcs8_private_key_info(private_key_info).map(Into::into)
-    }
-}
-
-#[cfg(feature = "pem")]
-#[cfg_attr(docsrs, doc(cfg(feature = "pem")))]
-impl FromStr for SigningKey {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        Self::from_pkcs8_pem(s).map_err(|_| Error::new())
     }
 }
 
