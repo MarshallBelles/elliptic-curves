@@ -307,7 +307,7 @@ mod tests {
     use crate::EncodedPoint;
     use core::convert::TryFrom;
     use hex_literal::hex;
-    use sha2::{Digest, Sha256};
+    use sha3::{Digest, Sha3_256};
 
     /// Signature recovery test vectors
     struct TestVector {
@@ -341,7 +341,7 @@ mod tests {
     fn public_key_recovery() {
         for vector in VECTORS {
             let sig = Signature::try_from(&vector.sig[..]).unwrap();
-            let prehash = Sha256::new().chain(vector.msg);
+            let prehash = Sha3_256::new().chain(vector.msg);
             let pk = sig.recover_verify_key_from_digest(prehash).unwrap();
             assert_eq!(&vector.pk[..], EncodedPoint::from(&pk).as_bytes());
         }
