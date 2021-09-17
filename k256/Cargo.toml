@@ -9,7 +9,7 @@ curve arithmetic useful for implementing arbitrary group-based protocols.
 
 Heavily modified for signing Flow blockchain transactions
 """
-version = "1.0.5" # Also update html_root_url in lib.rs when bumping this
+version = "1.0.6" # Also update html_root_url in lib.rs when bumping this
 authors = ["RustCrypto Developers"]
 license = "Apache-2.0 OR MIT"
 documentation = "https://docs.rs/elliptic-curve"

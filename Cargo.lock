@@ -137,15 +137,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fdab415d6744056100f40250a66bc430c1a46f7a02e20bc11c94c79a0f0464df"
 
 [[package]]
-name = "cpufeatures"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95059428f66df56b63431fdb4e1947ed2190586af5c5a8a8b71122bdf5a7f469"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "criterion"
 version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -437,7 +428,7 @@ dependencies = [
 
 [[package]]
 name = "k256"
-version = "1.0.5"
+version = "1.0.6"
 dependencies = [
  "blobby",
  "cfg-if",
@@ -548,7 +539,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
 name = "p256"
-version = "1.0.5"
+version = "1.0.6"
 dependencies = [
  "blobby",
  "ecdsa",
@@ -556,7 +547,6 @@ dependencies = [
  "hex-literal",
  "proptest",
  "rand_core",
- "sha2",
  "sha3",
 ]
 
@@ -868,19 +858,6 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "sha2"
-version = "0.9.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b69f9a4c9740d74c5baa3fd2e547f9525fa8088a8a958e0ca2409a514e33f5fa"
-dependencies = [
- "block-buffer",
- "cfg-if",
- "cpufeatures",
- "digest",
- "opaque-debug",
 ]
 
 [[package]]
