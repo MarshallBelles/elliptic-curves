@@ -19,17 +19,17 @@ categories = ["cryptography", "no-std"]
 keywords = ["crypto", "ecc", "nist", "prime256v1", "secp256r1"]
 
 [dependencies]
-elliptic-curve = { version = "=0.11.0-pre", default-features = false, features = ["hazmat"] }
+elliptic-curve = { git="https://github.com/MarshallBelles/traits.git", default-features = false, features = ["hazmat"] }
 
 # optional dependencies
-ecdsa-core = { version = "=0.13.0-pre", package = "ecdsa", optional = true, default-features = false, features = ["der"] }
+ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa", optional = true, default-features = false, features = ["der"] }
 hex-literal = { version = "0.3", optional = true }
 sha2 = { version = "0.9", optional = true, default-features = false }
 sha3 = { version = "0.9", optional = false, default-features = false }
 
 [dev-dependencies]
 blobby = "0.3"
-ecdsa-core = { version = "=0.13.0-pre", package = "ecdsa", default-features = false, features = ["dev"] }
+ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa", default-features = false, features = ["dev"] }
 hex-literal = "0.3"
 proptest = "1.0"
 rand_core = { version = "0.6", features = ["getrandom"] }
