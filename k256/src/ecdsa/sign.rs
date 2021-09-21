@@ -21,17 +21,11 @@ use elliptic_curve::{
     subtle::{Choice, ConstantTimeEq},
 };
 
-#[cfg(any(feature = "keccak256", feature = "sha256"))]
 use ecdsa_core::signature::{self, digest::Digest, PrehashSignature, RandomizedSigner};
 
-#[cfg(feature = "pkcs8")]
-use crate::pkcs8::{self, FromPrivateKey};
-
-#[cfg(feature = "pem")]
 use core::str::FromStr;
 
 /// ECDSA/secp256k1 signing key
-#[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
 #[derive(Clone)]
 pub struct SigningKey {
     /// Inner secret key value
@@ -62,19 +56,12 @@ impl SigningKey {
         }
     }
 
-    /// Legacy alias for [`SigningKey::verifying_key`].
-    #[deprecated(since = "0.9.3", note = "use `verifying_key()` instead")]
-    pub fn verify_key(&self) -> VerifyingKey {
-        self.verifying_key()
-    }
-
     /// Serialize this [`SigningKey`] as bytes
     pub fn to_bytes(&self) -> FieldBytes {
         self.inner.to_bytes()
     }
 }
 
-#[cfg(any(feature = "keccak256", feature = "sha256"))]
 impl<S> signature::Signer<S> for SigningKey
 where
     S: PrehashSignature,
@@ -85,7 +72,6 @@ where
     }
 }
 
-#[cfg(any(feature = "keccak256", feature = "sha256"))]
 impl<S> RandomizedSigner<S> for SigningKey
 where
     S: PrehashSignature,
@@ -271,26 +257,6 @@ impl From<&NonZeroScalar> for SigningKey {
         Self {
             inner: *secret_scalar,
         }
-    }
-}
-
-#[cfg(feature = "pkcs8")]
-#[cfg_attr(docsrs, doc(cfg(feature = "pkcs8")))]
-impl FromPrivateKey for SigningKey {
-    fn from_pkcs8_private_key_info(
-        private_key_info: pkcs8::PrivateKeyInfo<'_>,
-    ) -> pkcs8::Result<Self> {
-        SecretKey::from_pkcs8_private_key_info(private_key_info).map(Into::into)
-    }
-}
-
-#[cfg(feature = "pem")]
-#[cfg_attr(docsrs, doc(cfg(feature = "pem")))]
-impl FromStr for SigningKey {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Error> {
-        Self::from_pkcs8_pem(s).map_err(|_| Error::new())
     }
 }
 

@@ -1,5 +1,5 @@
 [package]
-name = "p256"
+name = "p256_flow"
 description = """
 Flow-Rust-SDK Version of p256
 Pure Rust implementation of the NIST P-256 (a.k.a. secp256r1, prime256v1)
@@ -7,12 +7,12 @@ elliptic curve with support for ECDH, ECDSA signing/verification, and general
 purpose curve arithmetic
 
 Heavily modified for signing Flow blockchain transactions
+Usage of this package outside of the flow-rust-sdk crate is not encouraged.
 """
-version = "1.0.6" # Also update html_root_url in lib.rs when bumping this
-authors = ["RustCrypto Developers"]
+version = "1.0.0" # Also update html_root_url in lib.rs when bumping this
+authors = ["RustCrypto Developers", "Marshall Belles"]
 license = "Apache-2.0 OR MIT"
-documentation = "https://docs.rs/elliptic-curve"
-repository = "https://github.com/RustCrypto/elliptic-curves/tree/master/p256"
+repository = "https://github.com/MarshallBelles/elliptic-curves/tree/master/p256"
 readme = "README.md"
 edition = "2018"
 categories = ["cryptography", "no-std"]

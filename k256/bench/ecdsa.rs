@@ -5,7 +5,7 @@ use ecdsa_core::{
     elliptic_curve::group::prime::PrimeCurveAffine,
     hazmat::{RecoverableSignPrimitive, VerifyPrimitive},
 };
-use k256::{
+use k256_flow::{
     elliptic_curve::{generic_array::arr, group::ff::PrimeField},
     AffinePoint, Scalar,
 };

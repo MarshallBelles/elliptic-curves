@@ -1,47 +1,9 @@
-//! Ethereum-style "recoverable signatures".
-//!
-//! These signatures include an additional [`Id`] field which allows for
-//! recovery of the [`VerifyingKey`] which can be used to verify them.
-//!
-//! This is helpful in cases where a hash/fingerprint of a [`VerifyingKey`]
-//! for a given signature in known in advance.
-//!
-//! ## Signing/Recovery Example
-//!
-//! NOTE: make sure to enable both the `ecdsa` and `keccak256` features of
-//! this crate for the example to work.
-//!
-//! ```
-//! # #[cfg(all(feature = "ecdsa", feature = "keccak256"))]
-//! # {
-//! use k256::{
-//!     ecdsa::{SigningKey, recoverable, signature::Signer},
-//!     EncodedPoint
-//! };
-//! use rand_core::OsRng; // requires 'getrandom' feature
-//!
-//! // Signing
-//! let signing_key = SigningKey::random(&mut OsRng); // Serialize with `::to_bytes()`
-//! let verify_key = signing_key.verify_key();
-//! let message = b"ECDSA proves knowledge of a secret number in the context of a single message";
-//!
-//! // Note: the signature type must be annotated or otherwise inferrable as
-//! // `Signer` has many impls of the `Signer` trait (for both regular and
-//! // recoverable signature types).
-//! let signature: recoverable::Signature = signing_key.sign(message);
-//! let recovered_key = signature.recover_verify_key(message).expect("couldn't recover pubkey");
-//!
-//! assert_eq!(&verify_key, &recovered_key);
-//! # }
-//! ```
-
 use core::{
     convert::{TryFrom, TryInto},
     fmt::{self, Debug},
 };
 use ecdsa_core::{signature::Signature as _, Error};
 
-#[cfg(feature = "ecdsa")]
 use crate::{
     ecdsa::{
         signature::{digest::Digest, DigestVerifier},
@@ -51,32 +13,14 @@ use crate::{
     lincomb, AffinePoint, FieldBytes, NonZeroScalar, ProjectivePoint, Scalar,
 };
 
-#[cfg(feature = "keccak256")]
-use sha3::Keccak256;
-
-/// Size of an Ethereum-style recoverable signature in bytes
 pub const SIZE: usize = 65;
 
-/// Ethereum-style "recoverable signatures" which allow for the recovery of
-/// the signer's [`VerifyingKey`] from the signature itself.
-///
-/// This format consists of [`Signature`] followed by a 1-byte recovery [`Id`]
-/// (65-bytes total):
-///
-/// - `r`: 32-byte integer, big endian
-/// - `s`: 32-byte integer, big endian
-/// - `v`: 1-byte recovery [`Id`]
 #[derive(Copy, Clone)]
 pub struct Signature {
     bytes: [u8; SIZE],
 }
 
 impl Signature {
-    /// Create a new recoverable ECDSA/secp256k1 signature from a regular
-    /// fixed-size signature and an associated recovery [`Id`].
-    ///
-    /// This is an "unchecked" conversion and assumes the provided [`Id`]
-    /// is valid for this signature.
     pub fn new(signature: &super::Signature, recovery_id: Id) -> Result<Self, Error> {
         let mut bytes = [0u8; SIZE];
         bytes[..64].copy_from_slice(signature.as_ref());
@@ -84,34 +28,10 @@ impl Signature {
         Ok(Self { bytes })
     }
 
-    /// Get the recovery [`Id`] for this signature
     pub fn recovery_id(self) -> Id {
         self.bytes[64].try_into().expect("invalid recovery ID")
     }
 
-    /// Given a public key, message, and signature, use trial recovery
-    /// to determine if a suitable recovery ID exists, or return an error
-    /// otherwise.
-    ///
-    /// Assumes Keccak256 as the message digest function. Use
-    /// [`Signature::from_digest_trial_recovery`] to support other
-    ///digest functions.
-    #[cfg(all(feature = "ecdsa", feature = "keccak256"))]
-    #[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
-    #[cfg_attr(docsrs, doc(cfg(feature = "keccak256")))]
-    pub fn from_trial_recovery(
-        public_key: &VerifyingKey,
-        msg: &[u8],
-        signature: &super::Signature,
-    ) -> Result<Self, Error> {
-        Self::from_digest_trial_recovery(public_key, Keccak256::new().chain(msg), signature)
-    }
-
-    /// Given a public key, message digest, and signature, use trial recovery
-    /// to determine if a suitable recovery ID exists, or return an error
-    /// otherwise.
-    #[cfg(feature = "ecdsa")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
     pub fn from_digest_trial_recovery<D>(
         public_key: &VerifyingKey,
         digest: D,
@@ -139,19 +59,10 @@ impl Signature {
         Err(Error::new())
     }
 
-    /// Recover the public key used to create the given signature as a
-    /// [`VerifyingKey`].
-    #[cfg(all(feature = "ecdsa", feature = "keccak256"))]
-    #[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
-    #[cfg_attr(docsrs, doc(cfg(feature = "keccak256")))]
     pub fn recover_verify_key(&self, msg: &[u8]) -> Result<VerifyingKey, Error> {
         self.recover_verify_key_from_digest(Keccak256::new().chain(msg))
     }
 
-    /// Recover the public key used to create the given signature as a
-    /// [`VerifyingKey`] from the provided precomputed [`Digest`].
-    #[cfg(feature = "ecdsa")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
     pub fn recover_verify_key_from_digest<D>(&self, msg_digest: D) -> Result<VerifyingKey, Error>
     where
         D: Digest<OutputSize = U32>,
@@ -159,11 +70,6 @@ impl Signature {
         self.recover_verify_key_from_digest_bytes(&msg_digest.finalize())
     }
 
-    /// Recover the public key used to create the given signature as a
-    /// [`VerifyingKey`] from the raw bytes of a message digest.
-    #[cfg(feature = "ecdsa")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
-    #[allow(non_snake_case, clippy::many_single_char_names)]
     pub fn recover_verify_key_from_digest_bytes(
         &self,
         digest_bytes: &FieldBytes,
@@ -180,24 +86,17 @@ impl Signature {
             let u2 = r_inv * *s;
             let pk = lincomb(&ProjectivePoint::generator(), &u1, &R, &u2).to_affine();
 
-            // TODO(tarcieri): ensure the signature verifies?
             Ok(VerifyingKey::from(&pk))
         } else {
             Err(Error::new())
         }
     }
 
-    /// Parse the `r` component of this signature to a [`NonZeroScalar`]
-    #[cfg(feature = "ecdsa")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
     pub fn r(&self) -> NonZeroScalar {
         NonZeroScalar::try_from(&self.bytes[..32])
             .expect("r-component ensured valid in constructor")
     }
 
-    /// Parse the `s` component of this signature to a [`NonZeroScalar`]
-    #[cfg(feature = "ecdsa")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "ecdsa")))]
     pub fn s(&self) -> NonZeroScalar {
         NonZeroScalar::try_from(&self.bytes[32..64])
             .expect("s-component ensured valid in constructor")
@@ -222,10 +121,8 @@ impl Debug for Signature {
     }
 }
 
-// TODO(tarcieri): derive `Eq` after const generics are available
 impl Eq for Signature {}
 
-// TODO(tarcieri): derive `PartialEq` after const generics are available
 impl PartialEq for Signature {
     fn eq(&self, other: &Self) -> bool {
         self.as_ref().eq(other.as_ref())
@@ -252,22 +149,6 @@ impl From<Signature> for super::Signature {
     }
 }
 
-#[cfg(feature = "keccak256")]
-impl ecdsa_core::signature::PrehashSignature for Signature {
-    type Digest = Keccak256;
-}
-
-/// Identifier used to compute a [`VerifyingKey`] from a [`Signature`].
-///
-/// In practice these values are always either `0` or `1`, and indicate
-/// whether or not the y-coordinate of the original [`VerifyingKey`] is odd.
-///
-/// While values `2` and `3` are also defined to capture whether `r`
-/// overflowed the curve's order, this crate does *not* support them.
-///
-/// There is a vanishingly small chance of these values occurring outside
-/// of contrived examples, so for simplicity's sake handling these values
-/// is unsupported and will return an `Error` when parsing the `Id`.
 #[derive(Copy, Clone, Debug)]
 pub struct Id(pub(super) u8);
 
@@ -281,7 +162,6 @@ impl Id {
     }
 
     /// Is `y` odd?
-    #[cfg(feature = "ecdsa")]
     fn is_y_odd(self) -> Choice {
         self.0.into()
     }

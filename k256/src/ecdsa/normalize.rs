@@ -15,7 +15,6 @@ impl NormalizeLow for Scalar {
     }
 }
 
-#[cfg(all(test, feature = "ecdsa"))]
 mod tests {
     use crate::ecdsa::Signature;
     use ecdsa_core::signature::Signature as _;

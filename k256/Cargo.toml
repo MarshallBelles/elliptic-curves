@@ -1,5 +1,5 @@
 [package]
-name = "k256"
+name = "k256_flow"
 description = """
 Flow-Rust-SDK Version of k256
 secp256k1 elliptic curve library written in pure Rust with support for ECDSA
@@ -8,12 +8,13 @@ recovery), Elliptic Curve Diffie-Hellman (ECDH), and general purpose secp256k1
 curve arithmetic useful for implementing arbitrary group-based protocols.
 
 Heavily modified for signing Flow blockchain transactions
+Usage of this package outside of the flow-rust-sdk crate is not encouraged.
 """
 version = "1.0.6" # Also update html_root_url in lib.rs when bumping this
-authors = ["RustCrypto Developers"]
+authors = ["RustCrypto Developers", "Marshall Belles"]
 license = "Apache-2.0 OR MIT"
 documentation = "https://docs.rs/elliptic-curve"
-repository = "https://github.com/RustCrypto/elliptic-curves/tree/master/k256"
+repository = "https://github.com/MarshallBelles/elliptic-curves/tree/master/k256"
 readme = "README.md"
 edition = "2018"
 categories = ["cryptography", "cryptography::cryptocurrencies", "no-std"]
@@ -21,7 +22,6 @@ keywords = ["bitcoin", "crypto", "ecc", "ethereum", "secp256k1"]
 
 [dependencies]
 cfg-if = "1.0"
-elliptic-curve = { git="https://github.com/MarshallBelles/traits.git", default-features = false, features = ["hazmat"] }
 
 # optional dependencies
 ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa", optional = true, default-features = false, features = ["der"] }
@@ -39,19 +39,12 @@ proptest = "1.0"
 rand_core = { version = "0.6", features = ["getrandom"] }
 
 [features]
-default = ["arithmetic", "ecdsa", "pkcs8", "sha256", "std"]
-arithmetic = ["elliptic-curve/arithmetic"]
-bits = ["arithmetic", "elliptic-curve/bits"]
+default = ["ecdsa", "sha256", "std"]
 digest = ["ecdsa-core/digest", "ecdsa-core/hazmat"]
-ecdh = ["arithmetic", "elliptic-curve/ecdh"]
-ecdsa = ["arithmetic", "digest", "ecdsa-core/sign", "ecdsa-core/verify"]
-expose-field = ["arithmetic"]
-jwk = ["elliptic-curve/jwk"]
+ecdsa = ["digest", "ecdsa-core/sign", "ecdsa-core/verify"]
 keccak256 = ["digest", "sha3"]
-pem = ["elliptic-curve/pem", "pkcs8"]
-pkcs8 = ["elliptic-curve/pkcs8"]
 sha256 = ["digest", "sha3"]
-std = ["ecdsa-core/std", "elliptic-curve/std"] # TODO: use weak activation for `ecdsa-core/std` when available
+std = ["ecdsa-core/std"] # TODO: use weak activation for `ecdsa-core/std` when available
 test-vectors = ["hex-literal"]
 
 [package.metadata.docs.rs]

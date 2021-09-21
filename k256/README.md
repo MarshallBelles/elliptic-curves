@@ -1,3 +1,9 @@
+# WARNING
+
+Heavily modified for signing Flow blockchain transactions
+Usage of this package outside of the [flow-rust-sdk](https://github.com/MarshallBelles/flow-rust-sdk) crate is not encouraged.
+
+
 # RustCrypto: secp256k1 (K-256) elliptic curve
 
 [![crate][crate-image]][crate-link]

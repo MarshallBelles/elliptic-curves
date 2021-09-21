@@ -284,7 +284,7 @@ version = "0.13.0-pre"
 source = "git+https://github.com/MarshallBelles/signatures.git#f7d36f31f1873c50df6686904c3df1334dd2636a"
 dependencies = [
  "der",
- "elliptic-curve",
+ "elliptic-curve 0.11.0-pre (git+https://github.com/MarshallBelles/traits.git)",
  "hmac",
  "signature",
 ]
@@ -294,6 +294,26 @@ name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
+
+[[package]]
+name = "elliptic-curve"
+version = "0.11.0-pre"
+dependencies = [
+ "base64ct",
+ "crypto-bigint",
+ "der",
+ "ff",
+ "generic-array",
+ "group",
+ "hex-literal",
+ "pem-rfc7468",
+ "pkcs8",
+ "rand_core",
+ "serde",
+ "serde_json",
+ "subtle",
+ "zeroize",
+]
 
 [[package]]
 name = "elliptic-curve"
@@ -427,14 +447,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "k256"
+name = "k256_flow"
 version = "1.0.6"
 dependencies = [
  "blobby",
  "cfg-if",
  "criterion",
  "ecdsa",
- "elliptic-curve",
  "hex-literal",
  "num-bigint",
  "num-traits",
@@ -538,12 +557,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
-name = "p256"
-version = "1.0.6"
+name = "p256_flow"
+version = "1.0.0"
 dependencies = [
  "blobby",
  "ecdsa",
- "elliptic-curve",
+ "elliptic-curve 0.11.0-pre (git+https://github.com/MarshallBelles/traits.git)",
  "hex-literal",
  "proptest",
  "rand_core",
