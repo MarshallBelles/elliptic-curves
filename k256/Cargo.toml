@@ -1,5 +1,5 @@
 [package]
-name = "k256"
+name = "k256_flow"
 description = """
 Flow-Rust-SDK Version of k256
 secp256k1 elliptic curve library written in pure Rust with support for ECDSA
@@ -9,7 +9,7 @@ curve arithmetic useful for implementing arbitrary group-based protocols.
 
 Heavily modified for signing Flow blockchain transactions
 """
-version = "1.0.6" # Also update html_root_url in lib.rs when bumping this
+version = "1.0.0" # Also update html_root_url in lib.rs when bumping this
 authors = ["RustCrypto Developers"]
 license = "Apache-2.0 OR MIT"
 documentation = "https://docs.rs/elliptic-curve"

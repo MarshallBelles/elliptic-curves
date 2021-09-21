@@ -4,7 +4,7 @@ use criterion::{
     criterion_group, criterion_main, measurement::Measurement, BenchmarkGroup, Criterion,
 };
 use hex_literal::hex;
-use k256::{
+use k256_flow::{
     elliptic_curve::{generic_array::arr, group::ff::PrimeField},
     lincomb, ProjectivePoint, Scalar,
 };

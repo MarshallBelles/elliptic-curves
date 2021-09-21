@@ -427,8 +427,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "k256"
-version = "1.0.6"
+name = "k256_flow"
+version = "1.0.0"
 dependencies = [
  "blobby",
  "cfg-if",
@@ -538,8 +538,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
-name = "p256"
-version = "1.0.6"
+name = "p256_flow"
+version = "1.0.0"
 dependencies = [
  "blobby",
  "ecdsa",
