@@ -9,12 +9,12 @@ use core::{
 use ecdsa_core::{
     hazmat::{FromDigest, RecoverableSignPrimitive},
     rfc6979,
-    signature::{
+    signature_flow::{
         digest::{BlockInput, FixedOutput, Reset, Update},
         DigestSigner, RandomizedDigestSigner,
     },
 };
-use elliptic_curve::{
+use elliptic_curve_flow::{
     consts::U32,
     ops::Invert,
     rand_core::{CryptoRng, RngCore},
@@ -22,7 +22,7 @@ use elliptic_curve::{
 };
 
 #[cfg(any(feature = "keccak256", feature = "sha256"))]
-use ecdsa_core::signature::{self, digest::Digest, PrehashSignature, RandomizedSigner};
+use ecdsa_core::signature_flow::{self, digest::Digest, PrehashSignature, RandomizedSigner};
 
 #[cfg(feature = "pkcs8")]
 use crate::pkcs8::{self, FromPrivateKey};
@@ -75,7 +75,7 @@ impl SigningKey {
 }
 
 #[cfg(any(feature = "keccak256", feature = "sha256"))]
-impl<S> signature::Signer<S> for SigningKey
+impl<S> signature_flow::Signer<S> for SigningKey
 where
     S: PrehashSignature,
     Self: DigestSigner<S::Digest, S>,

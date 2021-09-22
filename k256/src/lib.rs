@@ -64,7 +64,7 @@ pub mod ecdsa;
 #[cfg_attr(docsrs, doc(cfg(feature = "test-vectors")))]
 pub mod test_vectors;
 
-pub use elliptic_curve::{self, bigint::U256};
+pub use elliptic_curve_flow::{self, bigint::U256};
 
 #[cfg(feature = "arithmetic")]
 pub use arithmetic::{affine::AffinePoint, lincomb, projective::ProjectivePoint, scalar::Scalar};
@@ -74,9 +74,9 @@ pub use arithmetic::FieldElement;
 
 #[cfg(feature = "pkcs8")]
 #[cfg_attr(docsrs, doc(cfg(feature = "pkcs8")))]
-pub use elliptic_curve::pkcs8;
+pub use elliptic_curve_flow::pkcs8;
 
-use elliptic_curve::{consts::U33, generic_array::GenericArray};
+use elliptic_curve_flow::{consts::U33, generic_array::GenericArray};
 
 /// Order of the secp256k1 elliptic curve
 const ORDER: U256 =
@@ -96,7 +96,7 @@ const ORDER: U256 =
 #[derive(Copy, Clone, Debug, Default, Eq, PartialEq, PartialOrd, Ord)]
 pub struct Secp256k1;
 
-impl elliptic_curve::Curve for Secp256k1 {
+impl elliptic_curve_flow::Curve for Secp256k1 {
     /// 256-bit field modulus
     type UInt = U256;
 
@@ -104,21 +104,21 @@ impl elliptic_curve::Curve for Secp256k1 {
     const ORDER: U256 = ORDER;
 }
 
-impl elliptic_curve::PrimeCurve for Secp256k1 {}
+impl elliptic_curve_flow::PrimeCurve for Secp256k1 {}
 
-impl elliptic_curve::PointCompression for Secp256k1 {
+impl elliptic_curve_flow::PointCompression for Secp256k1 {
     /// secp256k1 points are typically compressed.
     const COMPRESS_POINTS: bool = true;
 }
 
 #[cfg(feature = "jwk")]
 #[cfg_attr(docsrs, doc(cfg(feature = "jwk")))]
-impl elliptic_curve::JwkParameters for Secp256k1 {
+impl elliptic_curve_flow::JwkParameters for Secp256k1 {
     const CRV: &'static str = "secp256k1";
 }
 
 #[cfg(feature = "pkcs8")]
-impl elliptic_curve::AlgorithmParameters for Secp256k1 {
+impl elliptic_curve_flow::AlgorithmParameters for Secp256k1 {
     const OID: pkcs8::ObjectIdentifier = pkcs8::ObjectIdentifier::new("1.3.132.0.10");
 }
 
@@ -128,26 +128,26 @@ pub type CompressedPoint = GenericArray<u8, U33>;
 /// secp256k1 (K-256) field element serialized as bytes.
 ///
 /// Byte array containing a serialized field element value (base field or scalar).
-pub type FieldBytes = elliptic_curve::FieldBytes<Secp256k1>;
+pub type FieldBytes = elliptic_curve_flow::FieldBytes<Secp256k1>;
 
 /// SEC1-encoded secp256k1 (K-256) curve point.
-pub type EncodedPoint = elliptic_curve::sec1::EncodedPoint<Secp256k1>;
+pub type EncodedPoint = elliptic_curve_flow::sec1::EncodedPoint<Secp256k1>;
 
 /// Non-zero secp256k1 (K-256) scalar field element.
 #[cfg(feature = "arithmetic")]
-pub type NonZeroScalar = elliptic_curve::NonZeroScalar<Secp256k1>;
+pub type NonZeroScalar = elliptic_curve_flow::NonZeroScalar<Secp256k1>;
 
 /// secp256k1 (K-256) public key.
 #[cfg(feature = "arithmetic")]
-pub type PublicKey = elliptic_curve::PublicKey<Secp256k1>;
+pub type PublicKey = elliptic_curve_flow::PublicKey<Secp256k1>;
 
 /// secp256k1 (K-256) secret key.
-pub type SecretKey = elliptic_curve::SecretKey<Secp256k1>;
+pub type SecretKey = elliptic_curve_flow::SecretKey<Secp256k1>;
 
 #[cfg(not(feature = "arithmetic"))]
-impl elliptic_curve::sec1::ValidatePublicKey for Secp256k1 {}
+impl elliptic_curve_flow::sec1::ValidatePublicKey for Secp256k1 {}
 
 /// Bit representation of a secp256k1 (K-256) scalar field element.
 #[cfg(feature = "bits")]
 #[cfg_attr(docsrs, doc(cfg(feature = "bits")))]
-pub type ScalarBits = elliptic_curve::ScalarBits<Secp256k1>;
+pub type ScalarBits = elliptic_curve_flow::ScalarBits<Secp256k1>;

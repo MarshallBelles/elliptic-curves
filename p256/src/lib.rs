@@ -64,7 +64,7 @@ pub mod ecdsa;
 #[cfg_attr(docsrs, doc(cfg(feature = "test-vectors")))]
 pub mod test_vectors;
 
-pub use elliptic_curve::{self, bigint::U256};
+pub use elliptic_curve_flow::{self, bigint::U256};
 
 #[cfg(feature = "arithmetic")]
 pub use arithmetic::{
@@ -75,9 +75,9 @@ pub use arithmetic::{
 
 #[cfg(feature = "pkcs8")]
 #[cfg_attr(docsrs, doc(cfg(feature = "pkcs8")))]
-pub use elliptic_curve::pkcs8;
+pub use elliptic_curve_flow::pkcs8;
 
-use elliptic_curve::{consts::U33, generic_array::GenericArray};
+use elliptic_curve_flow::{consts::U33, generic_array::GenericArray};
 
 /// NIST P-256 elliptic curve.
 ///
@@ -101,7 +101,7 @@ use elliptic_curve::{consts::U33, generic_array::GenericArray};
 #[derive(Copy, Clone, Debug, Default, Eq, PartialEq, PartialOrd, Ord)]
 pub struct NistP256;
 
-impl elliptic_curve::Curve for NistP256 {
+impl elliptic_curve_flow::Curve for NistP256 {
     /// 256-bit integer type used for internally representing field elements.
     type UInt = U256;
 
@@ -126,26 +126,26 @@ impl elliptic_curve::Curve for NistP256 {
         U256::from_be_hex("ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551");
 }
 
-impl elliptic_curve::PrimeCurve for NistP256 {}
+impl elliptic_curve_flow::PrimeCurve for NistP256 {}
 
-impl elliptic_curve::PointCompression for NistP256 {
+impl elliptic_curve_flow::PointCompression for NistP256 {
     /// NIST P-256 points are typically uncompressed.
     const COMPRESS_POINTS: bool = false;
 }
 
-impl elliptic_curve::PointCompaction for NistP256 {
+impl elliptic_curve_flow::PointCompaction for NistP256 {
     /// NIST P-256 points are typically uncompressed.
     const COMPACT_POINTS: bool = false;
 }
 
 #[cfg(feature = "jwk")]
 #[cfg_attr(docsrs, doc(cfg(feature = "jwk")))]
-impl elliptic_curve::JwkParameters for NistP256 {
+impl elliptic_curve_flow::JwkParameters for NistP256 {
     const CRV: &'static str = "P-256";
 }
 
 #[cfg(feature = "pkcs8")]
-impl elliptic_curve::AlgorithmParameters for NistP256 {
+impl elliptic_curve_flow::AlgorithmParameters for NistP256 {
     const OID: pkcs8::ObjectIdentifier = pkcs8::ObjectIdentifier::new("1.2.840.10045.3.1.7");
 }
 
@@ -155,26 +155,26 @@ pub type CompressedPoint = GenericArray<u8, U33>;
 /// NIST P-256 field element serialized as bytes.
 ///
 /// Byte array containing a serialized field element value (base field or scalar).
-pub type FieldBytes = elliptic_curve::FieldBytes<NistP256>;
+pub type FieldBytes = elliptic_curve_flow::FieldBytes<NistP256>;
 
 /// NIST P-256 SEC1 encoded point.
-pub type EncodedPoint = elliptic_curve::sec1::EncodedPoint<NistP256>;
+pub type EncodedPoint = elliptic_curve_flow::sec1::EncodedPoint<NistP256>;
 
 /// Non-zero NIST P-256 scalar field element.
 #[cfg(feature = "arithmetic")]
-pub type NonZeroScalar = elliptic_curve::NonZeroScalar<NistP256>;
+pub type NonZeroScalar = elliptic_curve_flow::NonZeroScalar<NistP256>;
 
 /// NIST P-256 public key.
 #[cfg(feature = "arithmetic")]
-pub type PublicKey = elliptic_curve::PublicKey<NistP256>;
+pub type PublicKey = elliptic_curve_flow::PublicKey<NistP256>;
 
 /// NIST P-256 secret key.
-pub type SecretKey = elliptic_curve::SecretKey<NistP256>;
+pub type SecretKey = elliptic_curve_flow::SecretKey<NistP256>;
 
 #[cfg(not(feature = "arithmetic"))]
-impl elliptic_curve::sec1::ValidatePublicKey for NistP256 {}
+impl elliptic_curve_flow::sec1::ValidatePublicKey for NistP256 {}
 
 /// Bit representation of a NIST P-256 scalar field element.
 #[cfg(feature = "bits")]
 #[cfg_attr(docsrs, doc(cfg(feature = "bits")))]
-pub type ScalarBits = elliptic_curve::ScalarBits<NistP256>;
+pub type ScalarBits = elliptic_curve_flow::ScalarBits<NistP256>;

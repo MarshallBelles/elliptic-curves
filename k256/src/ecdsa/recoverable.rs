@@ -15,7 +15,7 @@
 //! # #[cfg(all(feature = "ecdsa", feature = "keccak256"))]
 //! # {
 //! use k256::{
-//!     ecdsa::{SigningKey, recoverable, signature::Signer},
+//!     ecdsa::{SigningKey, recoverable, signature_flow::Signer},
 //!     EncodedPoint
 //! };
 //! use rand_core::OsRng; // requires 'getrandom' feature
@@ -39,15 +39,15 @@ use core::{
     convert::{TryFrom, TryInto},
     fmt::{self, Debug},
 };
-use ecdsa_core::{signature::Signature as _, Error};
+use ecdsa_core::{signature_flow::Signature as _, Error};
 
 #[cfg(feature = "ecdsa")]
 use crate::{
     ecdsa::{
-        signature::{digest::Digest, DigestVerifier},
+        signature_flow::{digest::Digest, DigestVerifier},
         VerifyingKey,
     },
-    elliptic_curve::{consts::U32, ops::Invert, subtle::Choice, DecompressPoint},
+    elliptic_curve_flow::{consts::U32, ops::Invert, subtle::Choice, DecompressPoint},
     lincomb, AffinePoint, FieldBytes, NonZeroScalar, ProjectivePoint, Scalar,
 };
 
@@ -204,7 +204,7 @@ impl Signature {
     }
 }
 
-impl ecdsa_core::signature::Signature for Signature {
+impl ecdsa_core::signature_flow::Signature for Signature {
     fn from_bytes(bytes: &[u8]) -> Result<Self, Error> {
         bytes.try_into()
     }
@@ -253,7 +253,7 @@ impl From<Signature> for super::Signature {
 }
 
 #[cfg(feature = "keccak256")]
-impl ecdsa_core::signature::PrehashSignature for Signature {
+impl ecdsa_core::signature_flow::PrehashSignature for Signature {
     type Digest = Keccak256;
 }
 

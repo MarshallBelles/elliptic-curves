@@ -2,7 +2,7 @@
 
 use super::{Scalar, MODULUS};
 use crate::ORDER;
-use elliptic_curve::{
+use elliptic_curve_flow::{
     bigint::{Limb, U256, U512},
     subtle::{Choice, ConditionallySelectable},
 };

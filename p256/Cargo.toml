@@ -19,32 +19,32 @@ categories = ["cryptography", "no-std"]
 keywords = ["crypto", "ecc", "nist", "prime256v1", "secp256r1"]
 
 [dependencies]
-elliptic-curve = { git="https://github.com/MarshallBelles/traits.git", default-features = false, features = ["hazmat"] }
+elliptic-curve-flow = { git="https://github.com/MarshallBelles/traits.git", default-features = false, features = ["hazmat"] }
 
 # optional dependencies
-ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa", optional = true, default-features = false, features = ["der"] }
+ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa-flow", optional = true, default-features = false, features = ["der"] }
 hex-literal = { version = "0.3", optional = true }
 sha3 = { version = "0.9.1", optional = false, default-features = false }
 
 [dev-dependencies]
 blobby = "0.3"
-ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa", default-features = false, features = ["dev"] }
+ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa-flow", default-features = false, features = ["dev"] }
 hex-literal = "0.3"
 proptest = "1.0"
 rand_core = { version = "0.6", features = ["getrandom"] }
 
 [features]
 default = ["arithmetic", "ecdsa", "pkcs8", "std", "sha256"]
-arithmetic = ["elliptic-curve/arithmetic"]
-bits = ["arithmetic", "elliptic-curve/bits"]
+arithmetic = ["elliptic-curve-flow/arithmetic"]
+bits = ["arithmetic", "elliptic-curve-flow/bits"]
 digest = ["ecdsa-core/digest", "ecdsa-core/hazmat"]
-ecdh = ["arithmetic", "elliptic-curve/ecdh"]
+ecdh = ["arithmetic", "elliptic-curve-flow/ecdh"]
 ecdsa = ["arithmetic", "ecdsa-core/sign", "ecdsa-core/verify", "sha256"]
-jwk = ["elliptic-curve/jwk"]
-pem = ["elliptic-curve/pem", "pkcs8"]
-pkcs8 = ["elliptic-curve/pkcs8"]
+jwk = ["elliptic-curve-flow/jwk"]
+pem = ["elliptic-curve-flow/pem", "pkcs8"]
+pkcs8 = ["elliptic-curve-flow/pkcs8"]
 sha256 = ["digest"]
-std = ["ecdsa-core/std", "elliptic-curve/std"] # TODO: use weak activation for `ecdsa-core/std` when available
+std = ["ecdsa-core/std", "elliptic-curve-flow/std"] # TODO: use weak activation for `ecdsa-core/std` when available
 test-vectors = ["hex-literal"]
 
 [package.metadata.docs.rs]

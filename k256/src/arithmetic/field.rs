@@ -31,7 +31,7 @@ cfg_if! {
 
 use crate::FieldBytes;
 use core::ops::{Add, AddAssign, Mul, MulAssign};
-use elliptic_curve::{
+use elliptic_curve_flow::{
     subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption},
     zeroize::Zeroize,
 };

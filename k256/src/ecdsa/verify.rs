@@ -6,12 +6,12 @@ use crate::{
     Secp256k1,
 };
 use core::convert::TryFrom;
-use ecdsa_core::{hazmat::VerifyPrimitive, signature};
-use elliptic_curve::{consts::U32, ops::Invert, sec1::ToEncodedPoint};
-use signature::{digest::Digest, DigestVerifier};
+use ecdsa_core::{hazmat::VerifyPrimitive, signature_flow};
+use elliptic_curve_flow::{consts::U32, ops::Invert, sec1::ToEncodedPoint};
+use signature_flow::{digest::Digest, DigestVerifier};
 
 #[cfg(feature = "sha256")]
-use signature::PrehashSignature;
+use signature_flow::PrehashSignature;
 
 #[cfg(feature = "pkcs8")]
 use crate::pkcs8::{self, FromPublicKey};
@@ -48,7 +48,7 @@ impl VerifyingKey {
 }
 
 #[cfg(feature = "sha256")]
-impl<S> signature::Verifier<S> for VerifyingKey
+impl<S> signature_flow::Verifier<S> for VerifyingKey
 where
     S: PrehashSignature,
     Self: DigestVerifier<S::Digest, S>,
@@ -182,7 +182,7 @@ impl FromStr for VerifyingKey {
 mod tests {
     use super::VerifyingKey;
     use crate::{test_vectors::ecdsa::ECDSA_TEST_VECTORS, Secp256k1};
-    use ecdsa_core::signature::Verifier;
+    use ecdsa_core::signature_flow::Verifier;
     use hex_literal::hex;
 
     ecdsa_core::new_verification_test!(Secp256k1, ECDSA_TEST_VECTORS);

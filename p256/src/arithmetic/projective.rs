@@ -6,7 +6,7 @@ use core::{
     iter::Sum,
     ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign},
 };
-use elliptic_curve::{
+use elliptic_curve_flow::{
     bigint::{Encoding, Limb},
     group::{
         ff::Field,
@@ -521,7 +521,7 @@ impl<'a> Neg for &'a ProjectivePoint {
 mod tests {
     use super::{AffinePoint, ProjectivePoint, Scalar};
     use crate::test_vectors::group::{ADD_TEST_VECTORS, MUL_TEST_VECTORS};
-    use elliptic_curve::group::{ff::PrimeField, prime::PrimeCurveAffine};
+    use elliptic_curve_flow::group::{ff::PrimeField, prime::PrimeCurveAffine};
 
     #[test]
     fn affine_to_projective() {

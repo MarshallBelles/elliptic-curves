@@ -8,7 +8,7 @@ pub(crate) use self::wide::WideScalar;
 
 use crate::{FieldBytes, Secp256k1, ORDER};
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Shr, Sub, SubAssign};
-use elliptic_curve::{
+use elliptic_curve_flow::{
     bigint::{limb, nlimbs, ArrayEncoding, Encoding, Limb, U256},
     generic_array::arr,
     group::ff::{Field, PrimeField},
@@ -22,10 +22,10 @@ use elliptic_curve::{
 };
 
 #[cfg(feature = "bits")]
-use {crate::ScalarBits, elliptic_curve::group::ff::PrimeFieldBits};
+use {crate::ScalarBits, elliptic_curve_flow::group::ff::PrimeFieldBits};
 
 #[cfg(feature = "digest")]
-use ecdsa_core::{elliptic_curve::consts::U32, hazmat::FromDigest, signature::digest::Digest};
+use ecdsa_core::{elliptic_curve_flow::consts::U32, hazmat::FromDigest, signature_flow::digest::Digest};
 
 #[cfg(test)]
 use num_bigint::{BigUint, ToBigUint};
@@ -47,7 +47,7 @@ const FRAC_MODULUS_2: U256 = ORDER.shr_vartime(1);
 ///
 /// Much of the important functionality of scalars is provided by traits from
 /// the [`ff`](https://docs.rs/ff/) crate, which is re-exported as
-/// `k256::elliptic_curve::ff`:
+/// `k256::elliptic_curve_flow::ff`:
 ///
 /// - [`Field`](https://docs.rs/ff/latest/ff/trait.Field.html) -
 ///   represents elements of finite fields and provides:
@@ -594,7 +594,7 @@ impl From<&Scalar> for FieldBytes {
 mod tests {
     use super::Scalar;
     use crate::arithmetic::dev::{biguint_to_bytes, bytes_to_biguint};
-    use elliptic_curve::group::ff::{Field, PrimeField};
+    use elliptic_curve_flow::group::ff::{Field, PrimeField};
     use num_bigint::{BigUint, ToBigUint};
     use proptest::prelude::*;
 
@@ -695,7 +695,7 @@ mod tests {
 
     #[test]
     fn generate_biased() {
-        use elliptic_curve::rand_core::OsRng;
+        use elliptic_curve_flow::rand_core::OsRng;
         let a = Scalar::generate_biased(&mut OsRng);
         // just to make sure `a` is not optimized out by the compiler
         assert_eq!((a - &a).is_zero().unwrap_u8(), 1);
@@ -703,7 +703,7 @@ mod tests {
 
     #[test]
     fn generate_vartime() {
-        use elliptic_curve::rand_core::OsRng;
+        use elliptic_curve_flow::rand_core::OsRng;
         let a = Scalar::generate_vartime(&mut OsRng);
         // just to make sure `a` is not optimized out by the compiler
         assert_eq!((a - &a).is_zero().unwrap_u8(), 1);

@@ -7,7 +7,7 @@
 //!   ECDSA/P-256 signature). Does not require the `arithmetic` feature.
 //!   This is useful for 3rd-party crates which wish to use the `Signature`
 //!   type for interoperability purposes (particularly in conjunction with the
-//!   [`signature::Signer`] trait. Example use cases for this include other
+//!   [`signature_flow::Signer`] trait. Example use cases for this include other
 //!   software implementations of ECDSA/P-256 and wrappers for cloud KMS
 //!   services or hardware devices (HSM or crypto hardware wallet).
 //! - `ecdsa`: provides `ecdsa-core` features plus the [`SigningKey`] and
@@ -22,7 +22,7 @@
 //! # #[cfg(feature = "ecdsa")]
 //! # {
 //! use p256::{
-//!     ecdsa::{SigningKey, Signature, signature::Signer},
+//!     ecdsa::{SigningKey, Signature, signature_flow::Signer},
 //! };
 //! use rand_core::OsRng; // requires 'getrandom' feature
 //!
@@ -32,14 +32,14 @@
 //! let signature = signing_key.sign(message);
 //!
 //! // Verification
-//! use p256::ecdsa::{VerifyingKey, signature::Verifier};
+//! use p256::ecdsa::{VerifyingKey, signature_flow::Verifier};
 //!
 //! let verify_key = VerifyingKey::from(&signing_key); // Serialize with `::to_encoded_point()`
 //! assert!(verify_key.verify(message, &signature).is_ok());
 //! # }
 //! ```
 
-pub use ecdsa_core::signature::{self, Error};
+pub use ecdsa_core::signature_flow::{self, Error};
 
 use super::NistP256;
 
@@ -48,7 +48,7 @@ use {
     crate::{AffinePoint, ProjectivePoint, Scalar},
     core::borrow::Borrow,
     ecdsa_core::hazmat::{SignPrimitive, VerifyPrimitive},
-    elliptic_curve::{group::ff::Field, ops::Invert},
+    elliptic_curve_flow::{group::ff::Field, ops::Invert},
 };
 
 /// ECDSA/P-256 signature (fixed-size)
@@ -133,12 +133,12 @@ impl VerifyPrimitive<NistP256> for AffinePoint {
 #[cfg(all(test, feature = "ecdsa"))]
 mod tests {
     use crate::{
-        ecdsa::{signature::Signer, SigningKey},
+        ecdsa::{signature_flow::Signer, SigningKey},
         test_vectors::ecdsa::ECDSA_TEST_VECTORS,
         BlindedScalar, Scalar,
     };
     use ecdsa_core::hazmat::SignPrimitive;
-    use elliptic_curve::{generic_array::GenericArray, group::ff::PrimeField, rand_core::OsRng};
+    use elliptic_curve_flow::{generic_array::GenericArray, group::ff::PrimeField, rand_core::OsRng};
     use hex_literal::hex;
 
     // Test vector from RFC 6979 Appendix 2.5 (NIST P-256 + SHA-256)

@@ -3,7 +3,7 @@
 use super::{FieldElement, ProjectivePoint, CURVE_EQUATION_A, CURVE_EQUATION_B, MODULUS};
 use crate::{CompressedPoint, EncodedPoint, FieldBytes, NistP256, Scalar};
 use core::ops::{Mul, Neg};
-use elliptic_curve::{
+use elliptic_curve_flow::{
     bigint::Encoding,
     generic_array::arr,
     group::{prime::PrimeCurveAffine, GroupEncoding},
@@ -282,7 +282,7 @@ impl Neg for AffinePoint {
 mod tests {
     use super::AffinePoint;
     use crate::EncodedPoint;
-    use elliptic_curve::{
+    use elliptic_curve_flow::{
         group::prime::PrimeCurveAffine,
         sec1::{FromEncodedPoint, ToCompactEncodedPoint, ToEncodedPoint},
     };

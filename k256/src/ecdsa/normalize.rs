@@ -18,7 +18,7 @@ impl NormalizeLow for Scalar {
 #[cfg(all(test, feature = "ecdsa"))]
 mod tests {
     use crate::ecdsa::Signature;
-    use ecdsa_core::signature::Signature as _;
+    use ecdsa_core::signature_flow::Signature as _;
 
     // Test vectors generated using rust-secp256k1
     #[test]

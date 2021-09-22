@@ -7,7 +7,7 @@ use crate::{
     FieldBytes, NistP256, SecretKey,
 };
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
-use elliptic_curve::{
+use elliptic_curve_flow::{
     bigint::{ArrayEncoding, Encoding, Limb, U256},
     generic_array::arr,
     group::ff::{Field, PrimeField},
@@ -18,10 +18,10 @@ use elliptic_curve::{
 };
 
 #[cfg(feature = "bits")]
-use {crate::ScalarBits, elliptic_curve::group::ff::PrimeFieldBits};
+use {crate::ScalarBits, elliptic_curve_flow::group::ff::PrimeFieldBits};
 
 #[cfg(feature = "digest")]
-use ecdsa_core::{elliptic_curve::consts::U32, hazmat::FromDigest, signature::digest::Digest};
+use ecdsa_core::{elliptic_curve_flow::consts::U32, hazmat::FromDigest, signature_flow::digest::Digest};
 
 /// Array containing 4 x 64-bit unsigned integers.
 // TODO(tarcieri): replace this entirely with `U256`
@@ -54,7 +54,7 @@ impl ScalarArithmetic for NistP256 {
 ///
 /// Much of the important functionality of scalars is provided by traits from
 /// the [`ff`](https://docs.rs/ff/) crate, which is re-exported as
-/// `p256::elliptic_curve::ff`:
+/// `p256::elliptic_curve_flow::ff`:
 ///
 /// - [`Field`](https://docs.rs/ff/latest/ff/trait.Field.html) -
 ///   represents elements of finite fields and provides:
@@ -783,7 +783,7 @@ pub(crate) const fn u256_to_u64x4(u256: U256) -> U64x4 {
 mod tests {
     use super::Scalar;
     use crate::{FieldBytes, SecretKey};
-    use elliptic_curve::group::ff::{Field, PrimeField};
+    use elliptic_curve_flow::group::ff::{Field, PrimeField};
 
     #[test]
     fn from_to_bytes_roundtrip() {

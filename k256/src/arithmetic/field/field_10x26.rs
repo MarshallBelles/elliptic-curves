@@ -2,7 +2,7 @@
 //! Ported from https://github.com/bitcoin-core/secp256k1
 
 use crate::FieldBytes;
-use elliptic_curve::{
+use elliptic_curve_flow::{
     subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption},
     zeroize::Zeroize,
 };

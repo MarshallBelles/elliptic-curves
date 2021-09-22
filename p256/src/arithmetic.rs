@@ -51,7 +51,7 @@ mod tests {
     #[test]
     fn generate_secret_key() {
         use crate::SecretKey;
-        use elliptic_curve::rand_core::OsRng;
+        use elliptic_curve_flow::rand_core::OsRng;
 
         let key = SecretKey::random(&mut OsRng);
 

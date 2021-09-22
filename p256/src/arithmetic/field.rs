@@ -6,7 +6,7 @@ use crate::{
 };
 use core::convert::TryInto;
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
-use elliptic_curve::{
+use elliptic_curve_flow::{
     rand_core::{CryptoRng, RngCore},
     subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption},
     zeroize::DefaultIsZeroes,

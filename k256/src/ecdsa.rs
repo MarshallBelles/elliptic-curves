@@ -7,7 +7,7 @@
 //!   ECDSA/secp256k1 signature). Does not require the `arithmetic` feature.
 //!   This is useful for 3rd-party crates which wish to use the `Signature`
 //!   type for interoperability purposes (particularly in conjunction with the
-//!   [`signature::Signer`] trait). Example use cases for this include other
+//!   [`signature_flow::Signer`] trait). Example use cases for this include other
 //!   software implementations of ECDSA/secp256k1 and wrappers for cloud KMS
 //!   services or hardware devices (HSM or crypto hardware wallet).
 //! - `ecdsa`: provides `ecdsa-core` features plus the [`SigningKey`] and
@@ -42,7 +42,7 @@
 //! # #[cfg(all(feature = "ecdsa", feature = "sha256"))]
 //! # {
 //! use k256::{
-//!     ecdsa::{SigningKey, Signature, signature::Signer},
+//!     ecdsa::{SigningKey, Signature, signature_flow::Signer},
 //!     SecretKey,
 //! };
 //! use rand_core::OsRng; // requires 'getrandom' feature
@@ -57,7 +57,7 @@
 //! let signature: Signature = signing_key.sign(message);
 //!
 //! // Verification
-//! use k256::{EncodedPoint, ecdsa::{VerifyingKey, signature::Verifier}};
+//! use k256::{EncodedPoint, ecdsa::{VerifyingKey, signature_flow::Verifier}};
 //!
 //! let verify_key = VerifyingKey::from(&signing_key); // Serialize with `::to_encoded_point()`
 //! assert!(verify_key.verify(message, &signature).is_ok());
@@ -73,10 +73,10 @@ mod sign;
 #[cfg(feature = "ecdsa")]
 mod verify;
 
-pub use ecdsa_core::signature::{self, Error};
+pub use ecdsa_core::signature_flow::{self, Error};
 
 #[cfg(feature = "digest")]
-pub use ecdsa_core::signature::digest;
+pub use ecdsa_core::signature_flow::digest;
 
 #[cfg(feature = "ecdsa")]
 pub use self::{sign::SigningKey, verify::VerifyingKey};
@@ -99,30 +99,30 @@ impl ecdsa_core::hazmat::DigestPrimitive for Secp256k1 {
 mod tests {
     mod wycheproof {
         use crate::Secp256k1;
-        use ecdsa_core::{elliptic_curve::sec1::EncodedPoint, signature::Verifier, Signature};
+        use ecdsa_core::{elliptic_curve_flow::sec1::EncodedPoint, signature_flow::Verifier, Signature};
 
         #[test]
         fn wycheproof() {
             use blobby::Blob5Iterator;
-            use elliptic_curve::bigint::Encoding as _;
+            use elliptic_curve_flow::bigint::Encoding as _;
 
             // Build a field element but allow for too-short input (left pad with zeros)
             // or too-long input (check excess leftmost bytes are zeros).
-            fn element_from_padded_slice<C: elliptic_curve::Curve>(
+            fn element_from_padded_slice<C: elliptic_curve_flow::Curve>(
                 data: &[u8],
-            ) -> elliptic_curve::FieldBytes<C> {
+            ) -> elliptic_curve_flow::FieldBytes<C> {
                 let point_len = C::UInt::BYTE_SIZE;
                 if data.len() >= point_len {
                     let offset = data.len() - point_len;
                     for v in data.iter().take(offset) {
                         assert_eq!(*v, 0, "EcdsaVerifier: point too large");
                     }
-                    elliptic_curve::FieldBytes::<C>::clone_from_slice(&data[offset..])
+                    elliptic_curve_flow::FieldBytes::<C>::clone_from_slice(&data[offset..])
                 } else {
                     let iter = core::iter::repeat(0)
                         .take(point_len - data.len())
                         .chain(data.iter().cloned());
-                    elliptic_curve::FieldBytes::<C>::from_exact_iter(iter).unwrap()
+                    elliptic_curve_flow::FieldBytes::<C>::from_exact_iter(iter).unwrap()
                 }
             }
 

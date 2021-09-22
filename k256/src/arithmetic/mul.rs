@@ -70,7 +70,7 @@ use crate::arithmetic::{
     ProjectivePoint,
 };
 use core::ops::{Mul, MulAssign};
-use elliptic_curve::subtle::{Choice, ConditionallySelectable, ConstantTimeEq};
+use elliptic_curve_flow::subtle::{Choice, ConditionallySelectable, ConstantTimeEq};
 
 /// Lookup table containing precomputed values `[p, 2p, 3p, ..., 8p]`
 #[derive(Copy, Clone, Default)]
@@ -348,8 +348,8 @@ impl MulAssign<&Scalar> for ProjectivePoint {
 mod tests {
     use super::lincomb;
     use crate::arithmetic::{ProjectivePoint, Scalar};
-    use elliptic_curve::rand_core::OsRng;
-    use elliptic_curve::{Field, Group};
+    use elliptic_curve_flow::rand_core::OsRng;
+    use elliptic_curve_flow::{Field, Group};
 
     #[test]
     fn test_lincomb() {

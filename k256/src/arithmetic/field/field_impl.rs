@@ -3,7 +3,7 @@
 //! Only enabled when `debug_assertions` feature is on.
 
 use crate::FieldBytes;
-use elliptic_curve::{
+use elliptic_curve_flow::{
     subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption},
     zeroize::Zeroize,
 };
