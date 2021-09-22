@@ -2,11 +2,11 @@
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use ecdsa_core::{
-    elliptic_curve::group::prime::PrimeCurveAffine,
+    elliptic_curve_flow::group::prime::PrimeCurveAffine,
     hazmat::{RecoverableSignPrimitive, VerifyPrimitive},
 };
 use k256_flow::{
-    elliptic_curve::{generic_array::arr, group::ff::PrimeField},
+    elliptic_curve_flow::{generic_array::arr, group::ff::PrimeField},
     AffinePoint, Scalar,
 };
 

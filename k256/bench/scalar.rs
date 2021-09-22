@@ -5,7 +5,7 @@ use criterion::{
 };
 use hex_literal::hex;
 use k256_flow::{
-    elliptic_curve::{generic_array::arr, group::ff::PrimeField},
+    elliptic_curve_flow::{generic_array::arr, group::ff::PrimeField},
     lincomb, ProjectivePoint, Scalar,
 };
 
