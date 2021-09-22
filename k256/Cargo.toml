@@ -12,7 +12,6 @@ Heavily modified for signing Flow blockchain transactions
 version = "1.0.0" # Also update html_root_url in lib.rs when bumping this
 authors = ["RustCrypto Developers"]
 license = "Apache-2.0 OR MIT"
-documentation = "https://docs.rs/elliptic-curve"
 repository = "https://github.com/RustCrypto/elliptic-curves/tree/master/k256"
 readme = "README.md"
 edition = "2018"
@@ -21,17 +20,17 @@ keywords = ["bitcoin", "crypto", "ecc", "ethereum", "secp256k1"]
 
 [dependencies]
 cfg-if = "1.0"
-elliptic-curve-flow = { git="https://github.com/MarshallBelles/traits.git", default-features = false, features = ["hazmat"] }
+elliptic-curve-flow = "1.0.0"
 
 # optional dependencies
-ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa-flow", optional = true, default-features = false, features = ["der"] }
+ecdsa-core = { version = "1.0.0", package = "ecdsa-flow", optional = true, default-features = false, features = ["der"] }
 hex-literal = { version = "0.3", optional = true }
 sha3 = { version = "0.9", optional = true, default-features = false }
 
 [dev-dependencies]
 blobby = "0.3"
 criterion = "0.3"
-ecdsa-core = { git = "https://github.com/MarshallBelles/signatures.git", package = "ecdsa-flow", default-features = false, features = ["dev"] }
+ecdsa-core = { version = "1.0.0", package = "ecdsa-flow", default-features = false, features = ["dev"] }
 hex-literal = "0.3"
 num-bigint = "0.4"
 num-traits = "0.2"
